@@ -30,7 +30,7 @@ This guide outlines the steps to set up and deploy Terraform configurations in a
 
 1. Generate an SSH key to be used for environment in `/terraform` directory:
    ```bash
-   ssh-keygen -t rsa -b 2048 -f assignment1
+   ssh-keygen -t rsa -b 2048 -f assignment2
    ```
 
 ## Step 4: Initialize and Apply Terraform for webserver
@@ -59,14 +59,19 @@ This repository contains Kubernetes manifests to deploy the containerized applic
 4. Container images for MySQL and the web application already pushed to Amazon ECR
 
 ```bash
-chmod +x k8s-setup-script.sh
-./k8s-setup-script.sh
+sudo ssh -i assignmnet2 <public-ip>
 ```
 
 ## Setup
 
 1. Clone this repository to your EC2 instance
 2. Ensure all manifest files have the correct ECR registry information (replace `${ECR_REGISTRY}` with your ECR repository URI)
+
+```bash
+chmod +x update-ecr.sh
+./update-ecr.sh
+```
+
 3. Run the setup script to install required tools and create the kind cluster:
 
 ```bash
