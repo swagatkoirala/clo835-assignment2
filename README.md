@@ -1,4 +1,53 @@
-# CLO835 Assignment 2 - Kubernetes Deployment
+# CLO835 Assignment 2 - Part 1: Terraform Setup
+
+This guide outlines the steps to set up and deploy Terraform configurations in an AWS Cloud9 environment for EC2 instance and AWS ECR.
+
+## Step 1: Install Terraform in Cloud9
+
+1. Open the terminal in your Cloud9 environment.
+2. Run the following commands to install Terraform:
+   ```bash
+   sudo yum install -y yum-utils
+   sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+   sudo yum -y install terraform
+   ```
+
+## Step 2: Initialize and Apply Terraform for network
+
+1. Navigate to the `terraform/network` directory:
+   ```bash
+   cd /terraform/network
+   ```
+2. Run the following Terraform commands:
+   ```bash
+   terraform init
+   terraform validate
+   terraform plan
+   terraform apply
+   ```
+
+## Step 3: Create a Global SSH Key
+
+1. Generate an SSH key to be used for environment in `/terraform` directory:
+   ```bash
+   ssh-keygen -t rsa -b 2048 -f assignment1
+   ```
+
+## Step 4: Initialize and Apply Terraform for webserver
+
+1. Navigate to the `terraform/webserver` directory:
+   ```bash
+   cd /terraform/webserver
+   ```
+2. Run the following Terraform commands:
+   ```bash
+   terraform init
+   terraform validate
+   terraform plan
+   terraform apply
+   ```
+
+# CLO835 Assignment 2 - Part 2: Kubernetes Deployment
 
 This repository contains Kubernetes manifests to deploy the containerized application from Assignment 1 to a local Kubernetes cluster using kind.
 
@@ -8,6 +57,11 @@ This repository contains Kubernetes manifests to deploy the containerized applic
 2. Docker installed on the EC2 instance
 3. AWS CLI configured with valid credentials (to pull images from ECR)
 4. Container images for MySQL and the web application already pushed to Amazon ECR
+
+```bash
+chmod +x k8s-setup-script.sh
+./k8s-setup-script.sh
+```
 
 ## Setup
 
@@ -24,7 +78,7 @@ chmod +x k8s-setup-script.sh
 
 The following Kubernetes manifests are included:
 
-- `namespace-manifests.yaml`: Creates the MySQL and webapp namespaces
+- `namespace.yaml`: Creates the MySQL and webapp namespaces
 - `mysql-pod.yaml`: Deploys the MySQL database as a pod
 - `webapp-pod.yaml`: Deploys the web application as a pod
 - `mysql-replicaset.yaml`: Creates a ReplicaSet for MySQL
@@ -37,7 +91,7 @@ The following Kubernetes manifests are included:
 
 ## Manual Deployment Steps
 
-If you prefer to deploy the manifests manually, follow these steps:
+Generated a deployment script file in the repository but if you prefer to deploy the manifests manually, follow these steps:
 
 1. Create the namespaces:
    ```bash
@@ -83,26 +137,3 @@ If you prefer to deploy the manifests manually, follow these steps:
    ```bash
    curl http://localhost:30000
    ```
-
-## Assignment Report Information
-
-### Key Concepts Addressed
-
-1. **Kubernetes API Server IP**: 
-   - In a kind cluster, the API server runs inside the control plane node container. You can get the IP by running:
-   ```bash
-   kubectl cluster-info
-   ```
-
-2. **Applications Listening on Same Port**:
-   - Yes, both applications can listen on the same port inside their containers. This is because each pod has its own network namespace, so there's no port conflict between different pods.
-
-3. **ReplicaSet and Pod Relationship**:
-   - The pods created separately in step 2 are not governed by the ReplicaSets created in step 3 unless they have the same labels that match the ReplicaSet's selector.
-
-4. **Deployment and ReplicaSet Relationship**:
-   - The ReplicaSets created in step 3 are not part of the Deployments created in step 4. Deployments create their own ReplicaSets with different names.
-
-5. **Different Service Types**:
-   - We use NodePort for the web application to make it accessible from outside the cluster.
-   - We use ClusterIP for MySQL because the database should only be accessible from within the cluster for security reasons.
