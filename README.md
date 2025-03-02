@@ -21,9 +21,7 @@ This guide outlines the steps to set up and deploy Terraform configurations in a
 2. Run the following Terraform commands:
    ```bash
    terraform init
-   terraform validate
-   terraform plan
-   terraform apply
+   terraform apply --auto-approve
    ```
 
 ## Step 3: Create a Global SSH Key
@@ -42,9 +40,7 @@ This guide outlines the steps to set up and deploy Terraform configurations in a
 2. Run the following Terraform commands:
    ```bash
    terraform init
-   terraform validate
-   terraform plan
-   terraform apply
+   terraform apply --auto-approve
    ```
 
 # CLO835 Assignment 2 - Part 2: Kubernetes Deployment

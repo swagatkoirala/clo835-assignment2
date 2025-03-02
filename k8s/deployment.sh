@@ -59,18 +59,18 @@ kind load docker-image clo835-assignment2-sql-image:v0.1 --name clo835-assignmen
 kind load docker-image clo835-assignment2-webapp-image:v0.1 --name clo835-assignment2
 kind load docker-image clo835-assignment2-webapp-image:v0.2 --name clo835-assignment2
 
-# Update manifest files with correct registry information
-sed -i "s|\${ECR_REGISTRY}|g" mysql-pod.yaml
-sed -i "s|\${ECR_REGISTRY}|g" webapp-pod.yaml
-sed -i "s|\${ECR_REGISTRY}|g" mysql-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}|g" webapp-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}|g" mysql-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}|g" webapp-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}|g" webapp-deployment-v2.yaml
+# Update manifest files with correct image names
+sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-sql-image|clo835-assignment2-sql-image|g" mysql-pod.yaml
+sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-pod.yaml
+sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-sql-image|clo835-assignment2-sql-image|g" mysql-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-sql-image|clo835-assignment2-sql-image|g" mysql-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-deployment-v2.yaml
 
 # Create namespaces
 echo "Creating namespaces..."
-kubectl apply -f namespace.yaml
+kubectl apply -f namespace-manifests.yaml
 
 # Deploy MySQL and webapp pods
 echo "Deploying MySQL and webapp pods..."
