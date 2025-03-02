@@ -9,7 +9,17 @@ if ! command -v docker &> /dev/null; then
   sudo systemctl enable docker
   sudo usermod -aG docker $USER
   echo "Docker installed successfully"
+
+  # Apply the group change immediately
+  echo "Activating docker group membership..."
+  newgrp docker << EONG
+  # Continue with the rest of the script here...
 fi
+
+# Make sure Docker is running
+sudo systemctl restart docker
+# Make sure the user can interact with Docker
+sudo chmod 666 /var/run/docker.sock
 
 # Install kind
 if ! command -v kind &> /dev/null; then
@@ -56,32 +66,32 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 
 # Pull images from ECR and load them into kind
 echo "Pulling images from ECR and loading into kind..."
-docker pull $ECR_REGISTRY/clo835-assignment1-sql-image:v0.1
-docker pull $ECR_REGISTRY/clo835-assignment1-webapp-image:v0.1
-docker pull $ECR_REGISTRY/clo835-assignment1-webapp-image:v0.2
+docker pull $ECR_REGISTRY/clo835-assignment2-sql-image:v0.1
+docker pull $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.1
+docker pull $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.2
 
 # Tag images for kind
-docker tag $ECR_REGISTRY/clo835-assignment1-sql-image:v0.1 clo835-assignment1-sql-image:v0.1
-docker tag $ECR_REGISTRY/clo835-assignment1-webapp-image:v0.1 clo835-assignment1-webapp-image:v0.1
-docker tag $ECR_REGISTRY/clo835-assignment1-webapp-image:v0.2 clo835-assignment1-webapp-image:v0.2
+docker tag $ECR_REGISTRY/clo835-assignment2-sql-image:v0.1 clo835-assignment2-sql-image:v0.1
+docker tag $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.1 clo835-assignment2-webapp-image:v0.1
+docker tag $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.2 clo835-assignment2-webapp-image:v0.2
 
 # Load images into kind
-kind load docker-image clo835-assignment1-sql-image:v0.1 --name clo835-assignment2
-kind load docker-image clo835-assignment1-webapp-image:v0.1 --name clo835-assignment2
-kind load docker-image clo835-assignment1-webapp-image:v0.2 --name clo835-assignment2
+kind load docker-image clo835-assignment2-sql-image:v0.1 --name clo835-assignment2
+kind load docker-image clo835-assignment2-webapp-image:v0.1 --name clo835-assignment2
+kind load docker-image clo835-assignment2-webapp-image:v0.2 --name clo835-assignment2
 
 # Update manifest files with correct registry information
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment1-sql-image|g" mysql-pod.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment1-webapp-image|g" webapp-pod.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment1-sql-image|g" mysql-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment1-webapp-image|g" webapp-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment1-sql-image|g" mysql-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment1-webapp-image|g" webapp-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment1-webapp-image|g" webapp-deployment-v2.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-pod.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-pod.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-deployment-v2.yaml
 
 # Create namespaces
 echo "Creating namespaces..."
-kubectl apply -f namespace-manifests.yaml
+kubectl apply -f namespace.yaml
 
 # Deploy MySQL and webapp pods
 echo "Deploying MySQL and webapp pods..."
