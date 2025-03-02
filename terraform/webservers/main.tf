@@ -39,7 +39,7 @@ resource "aws_instance" "amazon_linux" {
 #ssh key pair for ec2 instance
 resource "aws_key_pair" "web_key" {
   key_name   = var.prefix
-  public_key = file("../${var.prefix}.pub")
+  public_key = file("./${var.prefix}.pub")
 }
 
 resource "aws_security_group" "security_group" {
