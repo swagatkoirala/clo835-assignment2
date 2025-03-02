@@ -60,13 +60,13 @@ kind load docker-image clo835-assignment2-webapp-image:v0.1 --name clo835-assign
 kind load docker-image clo835-assignment2-webapp-image:v0.2 --name clo835-assignment2
 
 # Update manifest files with correct registry information
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-pod.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-pod.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-deployment-v2.yaml
+sed -i "s|\${ECR_REGISTRY}|g" mysql-pod.yaml
+sed -i "s|\${ECR_REGISTRY}|g" webapp-pod.yaml
+sed -i "s|\${ECR_REGISTRY}|g" mysql-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}|g" webapp-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}|g" mysql-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}|g" webapp-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}|g" webapp-deployment-v2.yaml
 
 # Create namespaces
 echo "Creating namespaces..."
