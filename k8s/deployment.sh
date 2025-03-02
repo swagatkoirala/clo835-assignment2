@@ -71,7 +71,7 @@ sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-deployment-
 
 # Create namespaces
 echo "Creating namespaces..."
-kubectl apply -f namespace-manifests.yaml
+kubectl apply -f namespace.yaml
 
 # Deploy MySQL and webapp pods
 echo "Deploying MySQL and webapp pods..."
