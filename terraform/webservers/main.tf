@@ -27,7 +27,7 @@ resource "aws_instance" "amazon_linux" {
   associate_public_ip_address = true
 
   root_block_device {
-    volume_size = 32
+    volume_size = 50
     volume_type = "gp2"
   }
 
