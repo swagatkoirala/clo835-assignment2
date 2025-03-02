@@ -89,7 +89,7 @@ resource "aws_security_group" "security_group" {
 
 #Amazon Elastic Container Registry (ECR) repository
 resource "aws_ecr_repository" "sql_repository" {
-  name = "clo835-assignment1-sql-image"
+  name = "clo835-assignment2-sql-image"
   image_scanning_configuration {
     scan_on_push = true
   }
@@ -99,7 +99,7 @@ resource "aws_ecr_repository" "sql_repository" {
 }
 
 resource "aws_ecr_repository" "webapp_repository" {
-  name = "clo835-assignment1-webapp-image"
+  name = "clo835-assignment2-webapp-image"
   image_scanning_configuration {
     scan_on_push = true
   }
