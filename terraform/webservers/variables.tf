@@ -5,7 +5,7 @@ variable "instance_type" {
 }
 
 variable "prefix" {
-  default     = "assignment1"
+  default     = "assignment2"
   description = "Prefix variable"
   type        = string
 }
