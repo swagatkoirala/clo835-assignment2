@@ -1,0 +1,48 @@
+name: K8s Deployment - Assignment 2
+on: 
+  pull_request:
+    branches:
+      - main
+    types:
+      - closed
+jobs:
+  build:
+    if: github.event.pull_request.merged == true
+    name: Build Image and Deploy to K8s
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check out code
+      uses: actions/checkout@v2
+    
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        mask-password: true
+        registry-type: private
+        skip-logout: false
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+        AWS_REGION: us-east-1
+    
+    - name: Build, tag, and push SQL and WebApp images to Amazon ECR
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        SQL_ECR_REPOSITORY: clo835-assignment2-sql-image
+        WEBAPP_ECR_REPOSITORY: clo835-assignment2-webapp-image
+        IMAGE_TAG_V1: v0.1
+        IMAGE_TAG_V2: v0.2
+      run: |
+        # Build Docker images
+        docker build -t $ECR_REGISTRY/$SQL_ECR_REPOSITORY:$IMAGE_TAG_V1 -f Dockerfile_mysql .
+        docker build -t $ECR_REGISTRY/$WEBAPP_ECR_REPOSITORY:$IMAGE_TAG_V1 -f Dockerfile .
+        
+        # For v0.2 of the webapp (with a different color for update demonstration)
+        docker build -t $ECR_REGISTRY/$WEBAPP_ECR_REPOSITORY:$IMAGE_TAG_V2 --build-arg APP_COLOR=lime -f Dockerfile .
+        
+        # Push images to ECR
+        docker push $ECR_REGISTRY/$SQL_ECR_REPOSITORY:$IMAGE_TAG_V1
+        docker push $ECR_REGISTRY/$WEBAPP_ECR_REPOSITORY:$IMAGE_TAG_V1
+        docker push $ECR_REGISTRY/$WEBAPP_ECR_REPOSITORY:$IMAGE_TAG_V2
