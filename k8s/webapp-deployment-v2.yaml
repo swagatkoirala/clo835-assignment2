@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: webapp
-        image: ${ECR_REGISTRY}/clo835-assignment1-webapp-image:v0.2
+        image: ${ECR_REGISTRY}:v0.2
         ports:
         - containerPort: 8080
         env:

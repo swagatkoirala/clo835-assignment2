@@ -8,7 +8,7 @@ metadata:
 spec:
   containers:
   - name: mysql
-    image: ${ECR_REGISTRY}/clo835-assignment1-sql-image:v0.1
+    image: ${ECR_REGISTRY}:v0.1
     ports:
     - containerPort: 3306
     env:
