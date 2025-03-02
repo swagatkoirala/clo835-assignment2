@@ -1,26 +1,5 @@
 #!/bin/bash
 
-# Install Docker if not already installed
-if ! command -v docker &> /dev/null; then
-  echo "Installing Docker..."
-  sudo yum update -y
-  sudo yum install -y docker
-  sudo systemctl start docker
-  sudo systemctl enable docker
-  sudo usermod -aG docker $USER
-  echo "Docker installed successfully"
-
-  # Apply the group change immediately
-  echo "Activating docker group membership..."
-  newgrp docker << EONG
-  # Continue with the rest of the script here...
-fi
-
-# Make sure Docker is running
-sudo systemctl restart docker
-# Make sure the user can interact with Docker
-sudo chmod 666 /var/run/docker.sock
-
 # Install kind
 if ! command -v kind &> /dev/null; then
   echo "Installing kind..."

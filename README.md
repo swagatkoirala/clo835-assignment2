@@ -65,18 +65,20 @@ sudo ssh -i assignmnet2 <public-ip>
 ## Setup
 
 1. Clone this repository to your EC2 instance
-2. Ensure all manifest files have the correct ECR registry information (replace `${ECR_REGISTRY}` with your ECR repository URI)
+2. Install Docker if not already installed then give the required usermod permission
 
 ```bash
-chmod +x update-ecr.sh
-./update-ecr.sh
+sudo yum update -y
+sudo yum install -y docker
+sudo systemctl start docker
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
 ```
-
 3. Run the setup script to install required tools and create the kind cluster:
 
 ```bash
-chmod +x k8s-setup-script.sh
-./k8s-setup-script.sh
+chmod +x deployment.sh
+./deployment.sh
 ```
 
 ## Manifests
