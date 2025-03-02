@@ -25,6 +25,12 @@ resource "aws_instance" "amazon_linux" {
   subnet_id                   = data.terraform_remote_state.network.outputs.public_subnet_id
   security_groups             = [aws_security_group.security_group.id]
   associate_public_ip_address = true
+
+  root_block_device {
+    volume_size = 32
+    volume_type = "gp2"
+  }
+
   tags = {
     "Name" = "EC2-Instance"
   }
