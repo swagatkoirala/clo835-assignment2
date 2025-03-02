@@ -1,15 +1,12 @@
 #!/bin/bash
-
 # Exit on any error
 set -e
-
 # Install kind
 if ! command -v kind &> /dev/null; then
   echo "Installing kind..."
   curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
   chmod +x ./kind
   sudo mv ./kind /usr/local/bin/
-  hash -r
   echo "kind installed successfully"
 fi
 
@@ -19,7 +16,6 @@ if ! command -v kubectl &> /dev/null; then
   curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
   chmod +x kubectl
   sudo mv ./kubectl /usr/local/bin/
-  hash -r
   echo "kubectl installed successfully"
 fi
 
@@ -35,29 +31,17 @@ nodes:
     protocol: TCP
 EOF
 
-# Configure AWS credentials if not already set
-if ! aws sts get-caller-identity &> /dev/null; then
-  echo "AWS credentials not configured. Please configure them now:"
-  aws configure
-fi
-
 # Create a kind cluster
 echo "Creating kind cluster..."
 kind create cluster --config=kind-config.yaml --name clo835-assignment2
 
 # Verify cluster is running
-echo "Verifying cluster status..."
 kubectl cluster-info
 kubectl get nodes
 
 # Set up ECR credentials to pull images
 echo "Setting up ECR credentials..."
 ECR_REGISTRY=$(aws ecr get-authorization-token --region us-east-1 --output text --query 'authorizationData[].proxyEndpoint' | sed 's|https://||')
-if [ -z "$ECR_REGISTRY" ]; then
-  echo "Failed to get ECR registry. Check your AWS credentials and permissions."
-  exit 1
-fi
-
 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $ECR_REGISTRY
 
 # Pull images from ECR and load them into kind
