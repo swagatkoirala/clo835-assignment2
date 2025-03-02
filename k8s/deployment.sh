@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# Exit on any error
+set -e
 # Install kind
 if ! command -v kind &> /dev/null; then
   echo "Installing kind..."
@@ -45,14 +46,14 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 
 # Pull images from ECR and load them into kind
 echo "Pulling images from ECR and loading into kind..."
-docker pull $ECR_REGISTRY/clo835-assignment2-sql-image:v0.1
-docker pull $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.1
-docker pull $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.2
+docker pull "$ECR_REGISTRY/clo835-assignment2-sql-image:v0.1"
+docker pull "$ECR_REGISTRY/clo835-assignment2-webapp-image:v0.1"
+docker pull "$ECR_REGISTRY/clo835-assignment2-webapp-image:v0.2"
 
 # Tag images for kind
-docker tag $ECR_REGISTRY/clo835-assignment2-sql-image:v0.1 clo835-assignment2-sql-image:v0.1
-docker tag $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.1 clo835-assignment2-webapp-image:v0.1
-docker tag $ECR_REGISTRY/clo835-assignment2-webapp-image:v0.2 clo835-assignment2-webapp-image:v0.2
+docker tag "$ECR_REGISTRY/clo835-assignment2-sql-image:v0.1" clo835-assignment2-sql-image:v0.1
+docker tag "$ECR_REGISTRY/clo835-assignment2-webapp-image:v0.1" clo835-assignment2-webapp-image:v0.1
+docker tag "$ECR_REGISTRY/clo835-assignment2-webapp-image:v0.2" clo835-assignment2-webapp-image:v0.2
 
 # Load images into kind
 kind load docker-image clo835-assignment2-sql-image:v0.1 --name clo835-assignment2
@@ -60,13 +61,13 @@ kind load docker-image clo835-assignment2-webapp-image:v0.1 --name clo835-assign
 kind load docker-image clo835-assignment2-webapp-image:v0.2 --name clo835-assignment2
 
 # Update manifest files with correct image names
-sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-sql-image|clo835-assignment2-sql-image|g" mysql-pod.yaml
-sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-pod.yaml
-sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-sql-image|clo835-assignment2-sql-image|g" mysql-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-replicaset.yaml
-sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-sql-image|clo835-assignment2-sql-image|g" mysql-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-deployment.yaml
-sed -i "s|\${ECR_REGISTRY}/clo835-assignment2-webapp-image|clo835-assignment2-webapp-image|g" webapp-deployment-v2.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-pod.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-pod.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-replicaset.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-deployment.yaml
+sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" webapp-deployment-v2.yaml
 
 # Create namespaces
 echo "Creating namespaces..."
@@ -91,13 +92,13 @@ echo "Testing webapp connection..."
 kubectl port-forward -n webapp pod/webapp-pod 8080:8080 --address 0.0.0.0 &
 PF_PID=$!
 sleep 5
-curl http://localhost:8080
+curl http://localhost:8080 || echo "Failed to connect to webapp, continuing..."
 
 # Check webapp logs
 kubectl logs -n webapp pod/webapp-pod
 
 # Kill the port-forward process
-kill $PF_PID
+kill $PF_PID || true
 
 # Deploy ReplicaSets
 echo "Deploying ReplicaSets..."
@@ -120,7 +121,7 @@ kubectl get svc -n webapp
 
 # Test NodePort service
 echo "Testing NodePort service..."
-curl http://localhost:30000
+curl http://localhost:30000 || echo "Failed to connect to NodePort service, continuing..."
 
 # Deploy Deployments
 echo "Deploying Deployments..."
@@ -142,6 +143,6 @@ kubectl get pods -n webapp -l app=employees
 kubectl describe deployment webapp-deployment -n webapp
 
 # Test the updated application
-curl http://localhost:30000
+curl http://localhost:30000 || echo "Failed to connect to updated application, continuing..."
 
 echo "Deployment complete!"
