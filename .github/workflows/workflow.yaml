@@ -1,4 +1,4 @@
-name: K8s Deployment - Assignment2
+name: K8s Deployment - Assignment 2
 on: 
   pull_request:
     branches:
