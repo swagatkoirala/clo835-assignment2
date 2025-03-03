@@ -73,40 +73,4 @@ for FILE in mysql-pod.yaml webapp-pod.yaml mysql-replicaset.yaml webapp-replicas
   echo "Updated $FILE with correct image names"
 done
 
-# Create namespaces if they don't exist
-if ! kubectl get ns | grep -q "mysql"; then
-  kubectl apply -f namespace.yaml
-fi
-
-# Deploy MySQL and webapp pods if they are not running
-if ! kubectl get pods -n mysql | grep -q "mysql-pod"; then
-  kubectl apply -f mysql-pod.yaml
-fi
-if ! kubectl get pods -n webapp | grep -q "webapp-pod"; then
-  kubectl apply -f webapp-pod.yaml
-fi
-
-# Wait for pods to be ready
-kubectl wait --for=condition=Ready pod/mysql-pod -n mysql --timeout=120s
-kubectl wait --for=condition=Ready pod/webapp-pod -n webapp --timeout=120s
-
-# Check pod status
-kubectl get pods -n mysql
-kubectl get pods -n webapp
-
-# Deploy ReplicaSets
-kubectl apply -f mysql-replicaset.yaml
-kubectl apply -f webapp-replicaset.yaml
-
-# Deploy Services
-kubectl apply -f mysql-service.yaml
-kubectl apply -f webapp-service.yaml
-
-# Deploy Deployments
-kubectl apply -f mysql-deployment.yaml
-kubectl apply -f webapp-deployment.yaml
-
-# Test the application connection
-curl http://localhost:30000 || echo "Failed to connect to updated application, continuing..."
-
 echo "Deployment complete!"
