@@ -94,19 +94,4 @@ kubectl wait --for=condition=Ready pod/webapp-pod -n webapp --timeout=120s
 kubectl get pods -n mysql
 kubectl get pods -n webapp
 
-# Deploy ReplicaSets
-kubectl apply -f mysql-replicaset.yaml
-kubectl apply -f webapp-replicaset.yaml
-
-# Deploy Services
-kubectl apply -f mysql-service.yaml
-kubectl apply -f webapp-service.yaml
-
-# Deploy Deployments
-kubectl apply -f mysql-deployment.yaml
-kubectl apply -f webapp-deployment.yaml
-
-# Test the application connection
-curl http://localhost:30000 || echo "Failed to connect to updated application, continuing..."
-
-echo "Deployment complete!"
+echo "Deployment complete untill the pods are created!"
