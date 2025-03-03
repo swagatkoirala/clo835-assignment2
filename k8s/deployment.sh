@@ -74,7 +74,7 @@ for FILE in mysql-pod.yaml webapp-pod.yaml mysql-replicaset.yaml webapp-replicas
 done
 
 # Create namespaces if they don't exist
-if ! kubectl get ns | grep -q "mysql"; then
+if ! kubectl get ns | grep -q "assignment2"; then
   kubectl apply -f namespace.yaml
 fi
 
@@ -87,11 +87,10 @@ if ! kubectl get pods -n webapp | grep -q "webapp-pod"; then
 fi
 
 # Wait for pods to be ready
-kubectl wait --for=condition=Ready pod/mysql-pod -n mysql --timeout=120s
-kubectl wait --for=condition=Ready pod/webapp-pod -n webapp --timeout=120s
+kubectl wait --for=condition=Ready pod/mysql-pod -n assignment2 --timeout=120s
+kubectl wait --for=condition=Ready pod/webapp-pod -n assignment2 --timeout=120s
 
 # Check pod status
-kubectl get pods -n mysql
-kubectl get pods -n webapp
+kubectl get pods -n assignment2
 
 echo "Deployment complete untill the pods are created!"
