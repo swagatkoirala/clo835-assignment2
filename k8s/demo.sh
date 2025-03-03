@@ -9,10 +9,7 @@ read -p "1. Show that your local K8s cluster is running on your Amazon EC2 insta
 - Run: kubectl get pods -A
 Press Enter when ready..."
 
-read -p "2. Deploy MySQL and web applications as pods in their respective namespaces:
-- Run: kubectl apply -f namespace.yaml
-- Run: kubectl apply -f mysql-pod.yaml
-- Run: kubectl apply -f webapp-pod.yaml
+read -p "2. Check MySQL and web applications as pods in their respective namespaces:
 - Run: kubectl get pods -n mysql
 - Run: kubectl get pods -n webapp
 Press Enter when ready..."
