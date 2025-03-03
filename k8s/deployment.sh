@@ -73,4 +73,4 @@ for FILE in mysql-pod.yaml webapp-pod.yaml mysql-replicaset.yaml webapp-replicas
   echo "Updated $FILE with correct image names"
 done
 
-echo "Deployment complete untill the pods are created!"
+echo "Deployment complete!"
