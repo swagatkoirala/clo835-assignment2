@@ -65,8 +65,11 @@ done
 
 # Update manifest files with correct image names
 for FILE in mysql-pod.yaml webapp-pod.yaml mysql-replicaset.yaml webapp-replicaset.yaml mysql-deployment.yaml webapp-deployment.yaml webapp-deployment-v2.yaml; do
-  sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" "$FILE"
-  sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" "$FILE"
+  if [[ "$FILE" == *"mysql"* ]]; then
+    sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" "$FILE"
+  elif [[ "$FILE" == *"webapp"* ]]; then
+    sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-webapp-image|g" "$FILE"
+  fi
   echo "Updated $FILE with correct image names"
 done
 
