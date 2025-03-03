@@ -21,7 +21,7 @@ if ! command -v kubectl &> /dev/null; then
 fi
 
 # Check if the kind cluster already exists
-if ! kind get clusters | grep -q "clo835-assignment22"; then
+if ! kind get clusters | grep -q "clo835-assignment2"; then
   echo "Creating kind cluster..."
   cat > kind-config.yaml << EOF
 kind: Cluster
@@ -33,7 +33,7 @@ nodes:
     hostPort: 30000
     protocol: TCP
 EOF
-  kind create cluster --config=kind-config.yaml --name clo835-assignment22
+  kind create cluster --config=kind-config.yaml --name clo835-assignment2
 else
   echo "Kind cluster already exists. Skipping creation."
 fi
@@ -60,7 +60,7 @@ for IMAGE in "${IMAGES[@]}"; do
     docker pull "$ECR_REGISTRY/$IMAGE"
     docker tag "$ECR_REGISTRY/$IMAGE" "$IMAGE"
   fi
-  kind load docker-image "$IMAGE" --name clo835-assignment22
+  kind load docker-image "$IMAGE" --name clo835-assignment2
 done
 
 # Update manifest files with correct image names
@@ -102,10 +102,6 @@ kubectl apply -f webapp-service.yaml
 # Deploy Deployments
 kubectl apply -f mysql-deployment.yaml
 kubectl apply -f webapp-deployment.yaml
-
-# Update webapp to version 0.2
-kubectl apply -f webapp-deployment-v2.yaml
-kubectl rollout status deployment/webapp-deployment -n webapp
 
 # Test the application connection
 curl http://localhost:30000 || echo "Failed to connect to updated application, continuing..."
