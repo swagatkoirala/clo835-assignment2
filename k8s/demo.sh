@@ -31,7 +31,7 @@ read -p "5. Deploy ReplicaSets with 3 replicas:
 - Run: kubectl apply -f webapp-replicaset.yaml
 - Run: kubectl get rs -n mysql
 - Run: kubectl get rs -n webapp
-- Run: kubectl get pods -n webapp -l app=mysql
+- Run: kubectl get pods -n mysql -l app=mysql
 - Run: kubectl get pods -n webapp -l app=employees
 Press Enter when ready..."
 
@@ -40,7 +40,7 @@ read -p "6. Create deployments using deployment manifests:
 - Run: kubectl apply -f webapp-deployment.yaml
 - Run: kubectl get deploy -n mysql
 - Run: kubectl get deploy -n webapp
-- Run: kubectl get pods -n webapp -l app=mysql
+- Run: kubectl get pods -n mysql -l app=mysql
 - Run: kubectl get pods -n webapp -l app=employees
 Press Enter when ready..."
 
