@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: webapp-rs
-  namespace: assignment2
+  namespace: webapp
 spec:
   replicas: 3
   selector:

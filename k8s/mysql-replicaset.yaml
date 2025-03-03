@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: ReplicaSet
 metadata:
   name: mysql-rs
-  namespace: assignment2
+  namespace: mysql
 spec:
   replicas: 3
   selector:
