@@ -33,7 +33,7 @@ EOF
 
 # Create a kind cluster
 echo "Creating kind cluster..."
-kind create cluster --config=kind-config.yaml --name clo835-assignment2
+kind create cluster --config=kind-config.yaml --name clo835-assignment22
 
 # Verify cluster is running
 kubectl cluster-info
@@ -56,9 +56,9 @@ docker tag "$ECR_REGISTRY/clo835-assignment2-webapp-image:v0.1" clo835-assignmen
 docker tag "$ECR_REGISTRY/clo835-assignment2-webapp-image:v0.2" clo835-assignment2-webapp-image:v0.2
 
 # Load images into kind
-kind load docker-image clo835-assignment2-sql-image:v0.1 --name clo835-assignment2
-kind load docker-image clo835-assignment2-webapp-image:v0.1 --name clo835-assignment2
-kind load docker-image clo835-assignment2-webapp-image:v0.2 --name clo835-assignment2
+kind load docker-image clo835-assignment2-sql-image:v0.1 --name clo835-assignment22
+kind load docker-image clo835-assignment2-webapp-image:v0.1 --name clo835-assignment22
+kind load docker-image clo835-assignment2-webapp-image:v0.2 --name clo835-assignment22
 
 # Update manifest files with correct image names
 sed -i "s|\${ECR_REGISTRY}|clo835-assignment2-sql-image|g" mysql-pod.yaml
